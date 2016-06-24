@@ -1,3 +1,6 @@
+/*
+Package iputil implements some useful functions for manipulating IP addresses
+*/
 package iputil
 
 import (
@@ -28,65 +31,19 @@ func SubnetContainsSubnet(supernet, subnet *net.IPNet) bool {
 }
 
 func LastAddr(n *net.IPNet) net.IP {
-	ip := n.IP.To4()
-	if ip != nil {
-		return net.IP{
-			ip[0] | ^n.Mask[0],
-			ip[1] | ^n.Mask[1],
-			ip[2] | ^n.Mask[2],
-			ip[3] | ^n.Mask[3],
-		}
+	rip := make([]byte, len(n.IP)) // return ip
+	for i := range n.IP {
+		rip[i] = n.IP[i] | ^n.Mask[i]
 	}
-
-	return net.IP{
-		ip[0] | ^n.Mask[0],
-		ip[1] | ^n.Mask[1],
-		ip[2] | ^n.Mask[2],
-		ip[3] | ^n.Mask[3],
-		ip[4] | ^n.Mask[4],
-		ip[5] | ^n.Mask[5],
-		ip[6] | ^n.Mask[6],
-		ip[7] | ^n.Mask[7],
-		ip[8] | ^n.Mask[8],
-		ip[9] | ^n.Mask[9],
-		ip[10] | ^n.Mask[10],
-		ip[11] | ^n.Mask[11],
-		ip[12] | ^n.Mask[12],
-		ip[13] | ^n.Mask[13],
-		ip[14] | ^n.Mask[14],
-		ip[15] | ^n.Mask[15],
-	}
+	return rip
 }
 
 func FirstAddr(n *net.IPNet) net.IP {
-	ip := n.IP.To4()
-	if ip != nil {
-		return net.IP{
-			ip[0] & n.Mask[0],
-			ip[1] & n.Mask[1],
-			ip[2] & n.Mask[2],
-			ip[3] & n.Mask[3],
-		}
+	rip := make([]byte, len(n.IP)) // return ip
+	for i := range n.IP {
+		rip[i] = n.IP[i] & n.Mask[i]
 	}
-
-	return net.IP{
-		ip[0] & n.Mask[0],
-		ip[1] & n.Mask[1],
-		ip[2] & n.Mask[2],
-		ip[3] & n.Mask[3],
-		ip[4] & n.Mask[4],
-		ip[5] & n.Mask[5],
-		ip[6] & n.Mask[6],
-		ip[7] & n.Mask[7],
-		ip[8] & n.Mask[8],
-		ip[9] & n.Mask[9],
-		ip[10] & n.Mask[10],
-		ip[11] & n.Mask[11],
-		ip[12] & n.Mask[12],
-		ip[13] & n.Mask[13],
-		ip[14] & n.Mask[14],
-		ip[15] & n.Mask[15],
-	}
+	return rip
 }
 
 func NetworkID(n *net.IPNet) *net.IPNet {
@@ -95,42 +52,36 @@ func NetworkID(n *net.IPNet) *net.IPNet {
 
 func RandAddr(n *net.IPNet) (net.IP, error) {
 	// ip & (mask | random) should generate a random ip
-	ip := n.IP.To4()
-	if ip != nil {
-		rand_bytes := make([]byte, 4)
-		_, err := rand.Read(rand_bytes)
-		if err != nil {
-			return nil, err
-		}
-		return net.IP{
-			ip[0] | (^n.Mask[0] & rand_bytes[0]),
-			ip[1] | (^n.Mask[1] & rand_bytes[1]),
-			ip[2] | (^n.Mask[2] & rand_bytes[2]),
-			ip[3] | (^n.Mask[3] & rand_bytes[3]),
-		}, nil
-	}
-
-	rand_bytes := make([]byte, 16)
+	rand_bytes := make([]byte, len(n.IP))
 	_, err := rand.Read(rand_bytes)
 	if err != nil {
 		return nil, err
 	}
-	return net.IP{
-		ip[0] | (^n.Mask[0] & rand_bytes[0]),
-		ip[1] | (^n.Mask[1] & rand_bytes[1]),
-		ip[2] | (^n.Mask[2] & rand_bytes[2]),
-		ip[3] | (^n.Mask[3] & rand_bytes[3]),
-		ip[4] | (^n.Mask[4] & rand_bytes[4]),
-		ip[5] | (^n.Mask[5] & rand_bytes[5]),
-		ip[6] | (^n.Mask[6] & rand_bytes[6]),
-		ip[7] | (^n.Mask[7] & rand_bytes[7]),
-		ip[8] | (^n.Mask[8] & rand_bytes[8]),
-		ip[9] | (^n.Mask[9] & rand_bytes[9]),
-		ip[10] | (^n.Mask[10] & rand_bytes[10]),
-		ip[11] | (^n.Mask[11] & rand_bytes[11]),
-		ip[12] | (^n.Mask[12] & rand_bytes[12]),
-		ip[13] | (^n.Mask[13] & rand_bytes[13]),
-		ip[14] | (^n.Mask[14] & rand_bytes[14]),
-		ip[15] | (^n.Mask[15] & rand_bytes[15]),
-	}, nil
+
+	rip := make([]byte, len(n.IP)) // return ip
+	for i := range n.IP {
+		rip[i] = n.IP[i] | (^n.Mask[i] & rand_bytes[i])
+	}
+
+	return rip, nil
+}
+
+func IPAdd(ip net.IP, offset int) net.IP {
+	rip := make([]byte, len(ip)) // return ip
+	il := len(ip) - 1
+	var c int // carryover
+	for i := range ip {
+		r := il - i                             // loop in reverse order
+		ofb := byte(offset >> uint(8*i) & 0xff) // offset bytes
+		rip[r] = byte(int(ip[r]) + int(ofb) + c)
+		switch {
+		case offset > 0 && int(rip[r]) < int(ip[r])+c: // wrapped on add
+			c = 1
+		case offset < 0 && int(rip[r]) > int(ip[r])-c: // wrapped on subtract
+			c = -1
+		default:
+			c = 0
+		}
+	}
+	return rip
 }
