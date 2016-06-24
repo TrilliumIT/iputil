@@ -57,7 +57,6 @@ func NetworkID(n *net.IPNet) *net.IPNet {
 
 // RandAddr generates a reandom address in an IPNet
 func RandAddr(n *net.IPNet) (net.IP, error) {
-	// ip & (mask | random) should generate a random ip
 	randBytes := make([]byte, len(n.IP))
 	_, err := rand.Read(randBytes)
 	if err != nil {
