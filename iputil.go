@@ -68,18 +68,21 @@ func RandAddr(n *net.IPNet) (net.IP, error) {
 
 func IPAdd(ip net.IP, offset int) net.IP {
 	rip := make([]byte, len(ip)) // return ip
-	il := len(ip) - 1
-	var c int // carryover
+	os := 1                      // offset sign
+	if offset < 0 {
+		os = -1
+	}
+	aos := offset * os // absolute offset
+	il := len(ip) - 1  // last element in ip
+	var c int          // carryover
 	for i := range ip {
-		r := il - i                             // loop in reverse order
-		ofb := byte(offset >> uint(8*i) & 0xff) // offset bytes
-		rip[r] = byte(int(ip[r]) + int(ofb) + c)
-		switch {
-		case offset > 0 && int(rip[r]) < int(ip[r])+c: // wrapped on add
-			c = 1
-		case offset < 0 && int(rip[r]) > int(ip[r])-c: // wrapped on subtract
-			c = -1
-		default:
+		r := il - i                           // loop in reverse order
+		ofb := (aos >> uint(8*i) & 0xff) * os // byte offset
+		rip[r] = byte(int(ip[r]) + ofb + c)
+		if int(rip[r]) != int(ip[r])+c && ((os > 0) == (int(rip[r]) < int(ip[r])+c)) {
+			// Indicates that we've wrapped the previous operation, carry
+			c = os
+		} else {
 			c = 0
 		}
 	}
