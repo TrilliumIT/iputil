@@ -9,7 +9,20 @@ import (
 )
 
 // SubnetEqualSubnet returns if to IPNets are equal
+// nil is considered to be a global supernet "0.0.0.0/0" or "::/0"
 func SubnetEqualSubnet(net1, net2 *net.IPNet) bool {
+	if net1 == nil && net2 == nil {
+		return true
+	}
+
+	if net1 == nil {
+		net1 = &net.IPNet{IP: make([]byte, len(net2.IP)), Mask: make([]byte, len(net2.Mask))}
+	}
+
+	if net2 == nil {
+		net2 = &net.IPNet{IP: make([]byte, len(net1.IP)), Mask: make([]byte, len(net1.Mask))}
+	}
+
 	if net1.Contains(net2.IP) {
 		n1len, n1bits := net1.Mask.Size()
 		n2len, n2bits := net2.Mask.Size()
@@ -21,7 +34,16 @@ func SubnetEqualSubnet(net1, net2 *net.IPNet) bool {
 }
 
 // SubnetContainsSubnet returns true if the first subnet contains the second
+// nil is considered to be a global supernet "0.0.0.0/0" or "::/0"
 func SubnetContainsSubnet(supernet, subnet *net.IPNet) bool {
+	if supernet == nil {
+		return true
+	}
+
+	if subnet == nil {
+		subnet = &net.IPNet{IP: make([]byte, len(supernet.IP)), Mask: make([]byte, len(supernet.Mask))}
+	}
+
 	if supernet.Contains(subnet.IP) {
 		n1len, n1bits := supernet.Mask.Size()
 		n2len, n2bits := subnet.Mask.Size()

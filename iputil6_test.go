@@ -38,6 +38,62 @@ func TestSubnetEqualSubnetTrueIpInNet6(t *testing.T) {
 	}
 }
 
+func TestSubnetEqualSubnetFalseN1Nil6(t *testing.T) {
+	_, net2, _ := net.ParseCIDR("fe80::/64")
+	if SubnetEqualSubnet(nil, net2) {
+		t.Errorf("Expected nil not equal %v", net2)
+	}
+}
+
+func TestSubnetEqualSubnetFalseN2Nil6(t *testing.T) {
+	_, net1, _ := net.ParseCIDR("fe80::/64")
+	if SubnetEqualSubnet(net1, nil) {
+		t.Errorf("Expected %v not equal nil", net1)
+	}
+}
+
+func TestSubnetEqualSubnetTrueN1NilN2Global6(t *testing.T) {
+	_, net2, _ := net.ParseCIDR("::/0")
+	if !SubnetEqualSubnet(nil, net2) {
+		t.Errorf("Expected nil equal %v", net2)
+	}
+}
+
+func TestSubnetEqualSubnetTrueN1GlobalN2Nil6(t *testing.T) {
+	_, net1, _ := net.ParseCIDR("::/0")
+	if !SubnetEqualSubnet(net1, nil) {
+		t.Errorf("Expected %v equal nil", net1)
+	}
+}
+
+func TestSubnetContainSubnetFalseN1Nil6(t *testing.T) {
+	_, net2, _ := net.ParseCIDR("fe80::/64")
+	if !SubnetContainsSubnet(nil, net2) {
+		t.Errorf("Expected nil contains %v", net2)
+	}
+}
+
+func TestSubnetContainSubnetFalseN2Nil6(t *testing.T) {
+	_, net1, _ := net.ParseCIDR("fe80::/64")
+	if SubnetContainsSubnet(net1, nil) {
+		t.Errorf("Expected %v not contains nil", net1)
+	}
+}
+
+func TestSubnetContainSubnetTrueN1NilN2Global6(t *testing.T) {
+	_, net2, _ := net.ParseCIDR("::/0")
+	if !SubnetContainsSubnet(nil, net2) {
+		t.Errorf("Expected nil contains %v", net2)
+	}
+}
+
+func TestSubnetContainSubnetTrueN1GlobalN2Nil6(t *testing.T) {
+	_, net1, _ := net.ParseCIDR("::/0")
+	if !SubnetContainsSubnet(net1, nil) {
+		t.Errorf("Expected %v contains nil", net1)
+	}
+}
+
 func TestSubnetContainSubnetTrueEqual6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	_, net2, _ := net.ParseCIDR("fe80::/64")

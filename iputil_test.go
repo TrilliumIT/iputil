@@ -38,6 +38,74 @@ func TestSubnetEqualSubnetTrueIpInNet(t *testing.T) {
 	}
 }
 
+func TestSubnetEqualSubnetTrueBothNil(t *testing.T) {
+	if !SubnetEqualSubnet(nil, nil) {
+		t.Error("Expected nil subnets to be equal.")
+	}
+}
+
+func TestSubnetEqualSubnetFalseN1Nil(t *testing.T) {
+	_, net2, _ := net.ParseCIDR("10.1.5.0/24")
+	if SubnetEqualSubnet(nil, net2) {
+		t.Errorf("Expected nil not equal %v", net2)
+	}
+}
+
+func TestSubnetEqualSubnetFalseN2Nil(t *testing.T) {
+	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
+	if SubnetEqualSubnet(net1, nil) {
+		t.Errorf("Expected %v not equal nil", net1)
+	}
+}
+
+func TestSubnetEqualSubnetTrueN1NilN2Global(t *testing.T) {
+	_, net2, _ := net.ParseCIDR("0.0.0.0/0")
+	if !SubnetEqualSubnet(nil, net2) {
+		t.Errorf("Expected nil equal %v", net2)
+	}
+}
+
+func TestSubnetEqualSubnetTrueN1GlobalN2Nil(t *testing.T) {
+	_, net1, _ := net.ParseCIDR("0.0.0.0/0")
+	if !SubnetEqualSubnet(net1, nil) {
+		t.Errorf("Expected %v equal nil", net1)
+	}
+}
+
+func TestSubnetContainSubnetTrueBothNil(t *testing.T) {
+	if !SubnetContainsSubnet(nil, nil) {
+		t.Error("Expected nil contains nil.")
+	}
+}
+
+func TestSubnetContainSubnetFalseN1Nil(t *testing.T) {
+	_, net2, _ := net.ParseCIDR("10.1.5.0/24")
+	if !SubnetContainsSubnet(nil, net2) {
+		t.Errorf("Expected nil contains %v", net2)
+	}
+}
+
+func TestSubnetContainSubnetFalseN2Nil(t *testing.T) {
+	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
+	if SubnetContainsSubnet(net1, nil) {
+		t.Errorf("Expected %v not contains nil", net1)
+	}
+}
+
+func TestSubnetContainSubnetTrueN1NilN2Global(t *testing.T) {
+	_, net2, _ := net.ParseCIDR("0.0.0.0/0")
+	if !SubnetContainsSubnet(nil, net2) {
+		t.Errorf("Expected nil contains %v", net2)
+	}
+}
+
+func TestSubnetContainSubnetTrueN1GlobalN2Nil(t *testing.T) {
+	_, net1, _ := net.ParseCIDR("0.0.0.0/0")
+	if !SubnetContainsSubnet(net1, nil) {
+		t.Errorf("Expected %v contains nil", net1)
+	}
+}
+
 func TestSubnetContainSubnetTrueEqual(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
 	_, net2, _ := net.ParseCIDR("10.1.5.0/24")
