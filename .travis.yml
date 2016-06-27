@@ -1,0 +1,7 @@
+before_install:
+  - go get https://github.com/Masterminds/glide
+  - go get https://github.com/mattn/goveralls
+  - $GOPATH/bin/glide install
+
+script:
+  - $GOPATH/bin/goveralls -service=travis-ci
