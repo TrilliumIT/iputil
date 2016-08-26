@@ -84,6 +84,7 @@ func NetworkID(n *net.IPNet) *net.IPNet {
 
 // RandAddr generates a reandom address in an IPNet
 func RandAddr(n *net.IPNet) (net.IP, error) {
+	n.IP = n.IP[len(n.IP)-len(n.Mask):]
 	randBytes := make([]byte, len(n.IP))
 	rand.Read(randBytes)             // rand.Read never returns an err.
 	rip := make([]byte, len(n.Mask)) // return ip
