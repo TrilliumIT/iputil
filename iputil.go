@@ -6,7 +6,12 @@ package iputil
 import (
 	"math/rand"
 	"net"
+	"time"
 )
+
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
 
 // SubnetEqualSubnet returns if to IPNets are equal
 // nil is considered to be a global supernet "0.0.0.0/0" or "::/0"
