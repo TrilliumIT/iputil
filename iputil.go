@@ -59,26 +59,28 @@ func SubnetContainsSubnet(supernet, subnet *net.IPNet) bool {
 	return false
 }
 
-// LastAddr returns the last address in an IPNet, usually the broadcast address
-func LastAddr(n *net.IPNet) net.IP {
-	rip := make([]byte, len(n.Mask)) // return ip
-	il := len(n.IP) - 1
+func manipulateAddr(n *net.IPNet, f func(n, m byte) byte) net.IP {
 	ml := len(n.Mask) - 1
-	for i := range n.Mask {
-		rip[ml-i] = n.IP[il-i] | ^n.Mask[ml-i]
+	il := len(n.IP) - 1
+	minl := ml
+	if len(n.IP)-1 < minl {
+		minl = len(n.IP) - 1
+	}
+	rip := make([]byte, minl+1) // return ip
+	for i := 0; i <= minl; i++ {
+		rip[minl-i] = f(n.IP[il-i], n.Mask[ml-i])
 	}
 	return rip
 }
 
+// LastAddr returns the last address in an IPNet, usually the broadcast address
+func LastAddr(n *net.IPNet) net.IP {
+	return manipulateAddr(n, func(n, m byte) byte { return n | ^m })
+}
+
 // FirstAddr returns the first address in an IPNet, usually the network address
 func FirstAddr(n *net.IPNet) net.IP {
-	rip := make([]byte, len(n.Mask)) // return ip
-	il := len(n.IP) - 1
-	ml := len(n.Mask) - 1
-	for i := range n.Mask {
-		rip[ml-i] = n.IP[il-i] & n.Mask[ml-i]
-	}
-	return rip
+	return manipulateAddr(n, func(n, m byte) byte { return n & m })
 }
 
 // NetworkID returns an IPNet representing the network, based on an IPNet of any IP in a network
@@ -88,17 +90,13 @@ func NetworkID(n *net.IPNet) *net.IPNet {
 }
 
 // RandAddr generates a reandom address in an IPNet
-func RandAddr(n *net.IPNet) (net.IP, error) {
-	n.IP = n.IP[len(n.IP)-len(n.Mask):]
-	randBytes := make([]byte, len(n.IP))
-	rand.Read(randBytes)             // rand.Read never returns an err.
-	rip := make([]byte, len(n.Mask)) // return ip
-	il := len(n.IP) - 1
-	ml := len(n.Mask) - 1
-	for i := range n.IP {
-		rip[ml-i] = n.IP[il-i] | (^n.Mask[ml-i] & randBytes[il-i])
+func RandAddr(n *net.IPNet) net.IP {
+	f := func(n, m byte) byte {
+		randBytes := make([]byte, 1)
+		rand.Read(randBytes) // rand.Read never returns an err.
+		return n | (^m & randBytes[0])
 	}
-	return rip, nil
+	return manipulateAddr(n, f)
 }
 
 //IPAdd adds an offset to an IP

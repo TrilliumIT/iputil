@@ -163,10 +163,7 @@ func TestNetworkID6(t *testing.T) {
 func TestRandomAddr6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	for i := 1; i <= 10; i++ {
-		rip, err := RandAddr(net1)
-		if err != nil {
-			t.Errorf("Error generating random bytes")
-		}
+		rip := RandAddr(net1)
 		if !net1.Contains(rip) {
 			t.Errorf("IP %v outside subnet %v", rip.String(), net1.String())
 		}

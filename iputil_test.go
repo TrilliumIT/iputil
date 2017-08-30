@@ -146,8 +146,30 @@ func TestLastAddr(t *testing.T) {
 	}
 }
 
+func TestLastAddrLongMask(t *testing.T) {
+	net1 := &net.IPNet{
+		IP:   net.IP{10, 1, 6, 0},
+		Mask: net.IPMask{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 0},
+	}
+	lr := net.ParseIP("10.1.6.255")
+	if !LastAddr(net1).Equal(lr) {
+		t.Errorf("Expected %v to equal %v", FirstAddr(net1).String(), lr.String())
+	}
+}
+
 func TestFirstAddr(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.6.0/24")
+	lr := net.ParseIP("10.1.6.0")
+	if !FirstAddr(net1).Equal(lr) {
+		t.Errorf("Expected %v to equal %v", FirstAddr(net1).String(), lr.String())
+	}
+}
+
+func TestFirstAddrLongMask(t *testing.T) {
+	net1 := &net.IPNet{
+		IP:   net.IP{10, 1, 6, 0},
+		Mask: net.IPMask{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 0},
+	}
 	lr := net.ParseIP("10.1.6.0")
 	if !FirstAddr(net1).Equal(lr) {
 		t.Errorf("Expected %v to equal %v", FirstAddr(net1).String(), lr.String())
@@ -167,10 +189,20 @@ func TestNetworkID(t *testing.T) {
 func TestRandomAddr(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.6.0/24")
 	for i := 1; i <= 10; i++ {
-		rip, err := RandAddr(net1)
-		if err != nil {
-			t.Errorf("Error generating random bytes")
+		rip := RandAddr(net1)
+		if !net1.Contains(rip) {
+			t.Errorf("IP %v outside subnet %v", rip.String(), net1.String())
 		}
+	}
+}
+
+func TestRandomAddrLongMask(t *testing.T) {
+	net1 := &net.IPNet{
+		IP:   net.IP{10, 1, 6, 0},
+		Mask: net.IPMask{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 0},
+	}
+	for i := 1; i <= 10; i++ {
+		rip := RandAddr(net1)
 		if !net1.Contains(rip) {
 			t.Errorf("IP %v outside subnet %v", rip.String(), net1.String())
 		}
