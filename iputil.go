@@ -13,7 +13,7 @@ func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
-// SubnetEqualSubnet returns if to IPNets are equal
+// SubnetEqualSubnet returns true if to IPNets are equal
 // nil is considered to be a global supernet "0.0.0.0/0" or "::/0"
 func SubnetEqualSubnet(net1, net2 *net.IPNet) bool {
 	if net1 == nil && net2 == nil {
