@@ -99,6 +99,41 @@ func RandAddr(n *net.IPNet) net.IP {
 	return manipulateAddr(n, f)
 }
 
+//RandAddrWithExclude Generates a random address in an IPNet, excluding the first xf and last xl addresses.
+//To generate a random address, excluding the network and broadcast addresses use 1 for xf and xl
+func RandAddrWithExclude(n *net.IPNet, xf, xl int) net.IP {
+	f := IPAdd(FirstAddr(n), xf)
+	l := IPAdd(LastAddr(n), -xl)
+	d := IPDiff(f, l)
+	return IPAdd(f, rand.Intn(d))
+}
+
+//IPDiff returns the difference between ip and ip2
+func IPDiff(ip, ip2 net.IP) int {
+	o := 1
+	if IPBefore(ip, ip2) {
+		ip, ip2 = ip2, ip
+		o = -1
+	}
+	ri := 0
+	il := len(ip) - 1 // last element in ip
+	for i := range ip {
+		r := il - i // loop in reverse order
+		ri = ri + ((int(ip[r] - ip2[r])) << (uint(8*i) & 0xff))
+	}
+	return ri * o
+}
+
+//IPDiff returns true if ip < ip2
+func IPBefore(ip, ip2 net.IP) bool {
+	for i := range ip {
+		if int(ip[i]) < int(ip2[i]) {
+			return true
+		}
+	}
+	return false
+}
+
 //IPAdd adds an offset to an IP
 func IPAdd(ip net.IP, offset int) net.IP {
 	rip := make([]byte, len(ip)) // return ip
