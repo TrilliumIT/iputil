@@ -154,25 +154,14 @@ func makeNilZero(ip, ip2 net.IP) (net.IP, net.IP) {
 }
 
 func makeSameLength(ip, ip2 net.IP) (net.IP, net.IP) {
-	var ph1 []byte
-	var ph2 []byte
-
 	if len(ip) < len(ip2) {
-		ph1 = append(ph1, ip2[:len(ip2)-len(ip)]...)
-		ph1 = append(ph1, ip[:]...)
-		ph2 = ip2
+		ip = append(append([]byte{}, ip2[:len(ip2)-len(ip)]...), ip...)
 	}
 	if len(ip2) < len(ip) {
-		ph2 = append(ph2, ip[:len(ip)-len(ip2)]...)
-		ph2 = append(ph2, ip2...)
-		ph1 = ip
-	}
-	if len(ip) == len(ip2) {
-		ph1 = ip
-		ph2 = ip2
+		ip2 = append(append([]byte{}, ip[:len(ip)-len(ip2)]...), ip2...)
 	}
 
-	return ph1, ph2
+	return ip, ip2
 }
 
 //IPAdd adds an offset to an IP

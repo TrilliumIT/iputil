@@ -367,3 +367,43 @@ func TestRandomAddrWithBadExcludeBoth(t *testing.T) {
 		t.Errorf("exclusions that land outside the subnet's range should return a nil IP")
 	}
 }
+
+func TestMakeSameLenghtNoChange(t *testing.T) {
+	ip := net.IP{10, 10, 10, 10}
+	oip := net.IP{10, 10, 10, 10}
+	ip2 := net.IP{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 10, 10, 10, 11}
+	oip2 := net.IP{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 10, 10, 10, 11}
+
+	nip, nip2 := makeSameLength(ip, ip2)
+
+	if !strictEqual(oip, ip) {
+		t.Errorf("value of ip should not have changed")
+	}
+	if !strictEqual(oip2, ip2) {
+		t.Errorf("value of ip2 should not have changed")
+	}
+
+	if !ip.Equal(nip) {
+		t.Errorf("ip should equal value nip")
+	}
+
+	if !ip2.Equal(nip2) {
+		t.Errorf("ip should equal value of nip")
+	}
+
+	if strictEqual(ip, nip) {
+		t.Errorf("ip should not strictly equal nip")
+	}
+}
+
+func strictEqual(ip, ip2 net.IP) bool {
+	if len(ip) != len(ip2) {
+		return false
+	}
+	for i := range ip {
+		if ip[i] != ip2[i] {
+			return false
+		}
+	}
+	return true
+}
