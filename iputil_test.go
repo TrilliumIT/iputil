@@ -368,13 +368,13 @@ func TestRandomAddrWithBadExcludeBoth(t *testing.T) {
 	}
 }
 
-func testNoChange(t *testing.T, f func(net.IP, net.IP) (net.IP, net.IP)) {
+func TestMakeSameLenghtNoChange(t *testing.T) {
 	ip := net.IP{10, 10, 10, 10}
 	oip := net.IP{10, 10, 10, 10}
 	ip2 := net.IP{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 10, 10, 10, 11}
 	oip2 := net.IP{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 10, 10, 10, 11}
 
-	nip, nip2 := f(ip, ip2)
+	nip, nip2 := makeSameLength(ip, ip2)
 
 	if !strictEqual(oip, ip) {
 		t.Errorf("value of ip should not have changed")
@@ -396,12 +396,38 @@ func testNoChange(t *testing.T, f func(net.IP, net.IP) (net.IP, net.IP)) {
 	}
 }
 
-func TestMakeSameLenghtNoChange(t *testing.T) {
-	testNoChange(t, makeSameLength)
-}
-
 func TestMakeNilZeroNoChange(t *testing.T) {
-	testNoChange(t, makeNilZero)
+	ip := net.IP{}
+	ip = nil
+	oip := net.IP{}
+	oip = nil
+	ip2 := net.IP{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 10, 10, 10, 11}
+	oip2 := net.IP{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 10, 10, 10, 11}
+
+	nip, nip2 := makeNilZero(ip, ip2)
+
+	if !strictEqual(oip, ip) {
+		t.Errorf("value of ip should not have changed")
+	}
+	if !strictEqual(oip2, ip2) {
+		t.Errorf("value of ip2 should not have changed")
+	}
+
+	if ip != nil {
+		t.Errorf("ip should equal value nil")
+	}
+
+	if !nip.Equal(net.IP{0, 0, 0, 0}) {
+		t.Errorf("nip should equal zero")
+	}
+
+	if !ip2.Equal(nip2) {
+		t.Errorf("ip should equal value of nip")
+	}
+
+	if strictEqual(ip, nip) {
+		t.Errorf("ip should not strictly equal nip")
+	}
 }
 
 func strictEqual(ip, ip2 net.IP) bool {
