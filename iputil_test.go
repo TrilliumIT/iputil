@@ -417,7 +417,7 @@ func TestMakeNilZeroNoChange(t *testing.T) {
 		t.Errorf("ip should equal value nil")
 	}
 
-	if !nip.Equal(net.IP{0, 0, 0, 0}) {
+	if !nip.Equal(net.IPv4zero) {
 		t.Errorf("nip should equal zero")
 	}
 

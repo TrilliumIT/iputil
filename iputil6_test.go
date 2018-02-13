@@ -1,6 +1,7 @@
 package iputil
 
 import (
+	"fmt"
 	"net"
 	"testing"
 )
@@ -260,6 +261,16 @@ func TestIPBeforeNilSecond6(t *testing.T) {
 	ret := IPBefore(ip, nil)
 	if ret {
 		t.Errorf("%v should not be before nil", ip.String())
+	}
+}
+
+func TestMakeSameLengthWithNil6(t *testing.T) {
+	ip := net.ParseIP("fe80::1")
+	nip, nip2 := makeNilZero(ip, nil)
+	_, nip2 = makeSameLength(nip, nip2)
+	if !nip2.Equal(net.IPv6zero) {
+		fmt.Printf("nip2: %v", nip2.String())
+		t.Errorf("nip2 should be zero")
 	}
 }
 

@@ -142,29 +142,28 @@ func IPBefore(ip, ip2 net.IP) bool {
 	return false
 }
 
-func makeNilZero(ip, ip2 net.IP) (net.IP, net.IP) {
-	if ip == nil {
-		ip = net.IP{0, 0, 0, 0}
+func makeNilZero(ip ...net.IP) (net.IP, net.IP) {
+	r := [2]net.IP{}
+	for i := range r {
+		if ip[i] == nil {
+			r[i] = net.IP{0, 0, 0, 0}
+			continue
+		}
+		r[i] = ip[i]
 	}
-	if ip2 == nil {
-		ip2 = net.IP{0, 0, 0, 0}
-	}
-
-	return ip, ip2
+	return r[0], r[1]
 }
 
 func makeSameLength(ip, ip2 net.IP) (net.IP, net.IP) {
 	if len(ip) != len(ip2) {
+		if ip.Equal(net.IPv4zero) {
+			ip = net.IPv6zero
+		}
+		if ip2.Equal(net.IPv4zero) {
+			ip2 = net.IPv6zero
+		}
 		return ip.To16(), ip2.To16()
 	}
-	/*
-		if len(ip) < len(ip2) {
-			ip = append(append([]byte{}, ip2[:len(ip2)-len(ip)]...), ip...)
-		}
-		if len(ip2) < len(ip) {
-			ip2 = append(append([]byte{}, ip[:len(ip)-len(ip2)]...), ip2...)
-		}
-	*/
 
 	return ip, ip2
 }
