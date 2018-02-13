@@ -154,12 +154,17 @@ func makeNilZero(ip, ip2 net.IP) (net.IP, net.IP) {
 }
 
 func makeSameLength(ip, ip2 net.IP) (net.IP, net.IP) {
-	if len(ip) < len(ip2) {
-		ip = append(append([]byte{}, ip2[:len(ip2)-len(ip)]...), ip...)
+	if len(ip) != len(ip2) {
+		return ip.To16(), ip2.To16()
 	}
-	if len(ip2) < len(ip) {
-		ip2 = append(append([]byte{}, ip[:len(ip)-len(ip2)]...), ip2...)
-	}
+	/*
+		if len(ip) < len(ip2) {
+			ip = append(append([]byte{}, ip2[:len(ip2)-len(ip)]...), ip...)
+		}
+		if len(ip2) < len(ip) {
+			ip2 = append(append([]byte{}, ip[:len(ip)-len(ip2)]...), ip2...)
+		}
+	*/
 
 	return ip, ip2
 }
