@@ -130,7 +130,7 @@ func IPDiff(ip, ip2 net.IP) int {
 	return ri * o
 }
 
-//IPDiff returns true if ip < ip2
+//IPBefore returns true if ip < ip2
 func IPBefore(ip, ip2 net.IP) bool {
 	ip, ip2 = makeNilZero(ip, ip2)
 	ip, ip2 = makeSameLength(ip, ip2)

@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+// nolint dupl
 func TestSubnetEqualSubnetTrue6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	_, net2, _ := net.ParseCIDR("fe80::/64")
@@ -14,6 +15,7 @@ func TestSubnetEqualSubnetTrue6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetFalseDifferentMask6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	_, net2, _ := net.ParseCIDR("fe80::/48")
@@ -22,6 +24,7 @@ func TestSubnetEqualSubnetFalseDifferentMask6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetFalseDifferentNet6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	_, net2, _ := net.ParseCIDR("fe80:1::/64")
@@ -30,6 +33,7 @@ func TestSubnetEqualSubnetFalseDifferentNet6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetTrueIpInNet6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	ip2, net2, _ := net.ParseCIDR("fe80::1/64")
@@ -39,6 +43,7 @@ func TestSubnetEqualSubnetTrueIpInNet6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetFalseN1Nil6(t *testing.T) {
 	_, net2, _ := net.ParseCIDR("fe80::/64")
 	if SubnetEqualSubnet(nil, net2) {
@@ -46,6 +51,7 @@ func TestSubnetEqualSubnetFalseN1Nil6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetFalseN2Nil6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	if SubnetEqualSubnet(net1, nil) {
@@ -53,6 +59,7 @@ func TestSubnetEqualSubnetFalseN2Nil6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetTrueN1NilN2Global6(t *testing.T) {
 	_, net2, _ := net.ParseCIDR("::/0")
 	if !SubnetEqualSubnet(nil, net2) {
@@ -60,6 +67,7 @@ func TestSubnetEqualSubnetTrueN1NilN2Global6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetTrueN1GlobalN2Nil6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("::/0")
 	if !SubnetEqualSubnet(net1, nil) {
@@ -67,6 +75,7 @@ func TestSubnetEqualSubnetTrueN1GlobalN2Nil6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetFalseN1Nil6(t *testing.T) {
 	_, net2, _ := net.ParseCIDR("fe80::/64")
 	if !SubnetContainsSubnet(nil, net2) {
@@ -74,6 +83,7 @@ func TestSubnetContainSubnetFalseN1Nil6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetFalseN2Nil6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	if SubnetContainsSubnet(net1, nil) {
@@ -81,6 +91,7 @@ func TestSubnetContainSubnetFalseN2Nil6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueN1NilN2Global6(t *testing.T) {
 	_, net2, _ := net.ParseCIDR("::/0")
 	if !SubnetContainsSubnet(nil, net2) {
@@ -88,6 +99,7 @@ func TestSubnetContainSubnetTrueN1NilN2Global6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueN1GlobalN2Nil6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("::/0")
 	if !SubnetContainsSubnet(net1, nil) {
@@ -95,6 +107,7 @@ func TestSubnetContainSubnetTrueN1GlobalN2Nil6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueEqual6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	_, net2, _ := net.ParseCIDR("fe80::/64")
@@ -103,6 +116,7 @@ func TestSubnetContainSubnetTrueEqual6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueSmaller6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/48")
 	_, net2, _ := net.ParseCIDR("fe80::/64")
@@ -111,6 +125,7 @@ func TestSubnetContainSubnetTrueSmaller6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueSmallerDiff6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/48")
 	_, net2, _ := net.ParseCIDR("fe80:0:0:1::/64")
@@ -119,6 +134,7 @@ func TestSubnetContainSubnetTrueSmallerDiff6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetFalseLarger6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	_, net2, _ := net.ParseCIDR("fe80::/48")
@@ -127,6 +143,7 @@ func TestSubnetContainSubnetFalseLarger6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetFalseDifferent6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	_, net2, _ := net.ParseCIDR("fe80:1::/64")
@@ -135,6 +152,7 @@ func TestSubnetContainSubnetFalseDifferent6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestLastAddr6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	lr := net.ParseIP("fe80::ffff:ffff:ffff:ffff")
@@ -143,6 +161,7 @@ func TestLastAddr6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestFirstAddr6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::55/64")
 	lr := net.ParseIP("fe80::")
@@ -151,6 +170,7 @@ func TestFirstAddr6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestNetworkID6(t *testing.T) {
 	ip1, net1, _ := net.ParseCIDR("fe80::55/64")
 	net1.IP = ip1
@@ -161,6 +181,7 @@ func TestNetworkID6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddr6(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("fe80::/64")
 	for i := 1; i <= 10; i++ {
@@ -171,6 +192,7 @@ func TestRandomAddr6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPAdd6(t *testing.T) {
 	ip := net.ParseIP("fe80::")
 	r := net.ParseIP("fe80::1")
@@ -179,6 +201,7 @@ func TestIPAdd6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPAddCarryover6(t *testing.T) {
 	ip := net.ParseIP("fe80::ffff")
 	r := net.ParseIP("fe80::1:4")
@@ -187,6 +210,7 @@ func TestIPAddCarryover6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPAddCarryover26(t *testing.T) {
 	ip := net.ParseIP("fe80::ffff:ffff")
 	r := net.ParseIP("fe80::1:0:4")
@@ -195,6 +219,7 @@ func TestIPAddCarryover26(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPSub6(t *testing.T) {
 	ip := net.ParseIP("fe80::5")
 	r := net.ParseIP("fe80::4")
@@ -203,6 +228,7 @@ func TestIPSub6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPSubCarryover6(t *testing.T) {
 	ip := net.ParseIP("fe80::100")
 	r := net.ParseIP("fe80::fb")
@@ -212,6 +238,7 @@ func TestIPSubCarryover6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPSubCarryover26(t *testing.T) {
 	ip := net.ParseIP("fe80::1:0")
 	r := net.ParseIP("fe80::fffb")
@@ -221,6 +248,7 @@ func TestIPSubCarryover26(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBefore6(t *testing.T) {
 	ip := net.ParseIP("fe80::1")
 	ip2 := net.ParseIP("fe80::2")
@@ -230,6 +258,7 @@ func TestIPBefore6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPNotBefore6(t *testing.T) {
 	ip := net.ParseIP("fe80::2")
 	ip2 := net.ParseIP("fe80::1")
@@ -239,6 +268,7 @@ func TestIPNotBefore6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBeforeEqual6(t *testing.T) {
 	ip := net.ParseIP("fe80::1")
 	ip2 := net.ParseIP("fe80::1")
@@ -248,6 +278,7 @@ func TestIPBeforeEqual6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBeforeNilFirst6(t *testing.T) {
 	ip2 := net.ParseIP("fe80::1")
 	ret := IPBefore(nil, ip2)
@@ -256,6 +287,7 @@ func TestIPBeforeNilFirst6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBeforeNilSecond6(t *testing.T) {
 	ip := net.ParseIP("fe80::1")
 	ret := IPBefore(ip, nil)
@@ -264,6 +296,7 @@ func TestIPBeforeNilSecond6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestMakeSameLengthWithNil6(t *testing.T) {
 	ip := net.ParseIP("fe80::1")
 	nip, nip2 := makeNilZero(ip, nil)
@@ -274,6 +307,7 @@ func TestMakeSameLengthWithNil6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPDiffNeg6(t *testing.T) {
 	ip := net.ParseIP("fe80::1")
 	ip2 := net.ParseIP("fe80::2")
@@ -283,6 +317,7 @@ func TestIPDiffNeg6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPDiffPos6(t *testing.T) {
 	ip := net.ParseIP("fe80::2")
 	ip2 := net.ParseIP("fe80::1")
@@ -292,6 +327,7 @@ func TestIPDiffPos6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPDiffEq6(t *testing.T) {
 	ip := net.ParseIP("fe80::1")
 	ip2 := net.ParseIP("fe80::1")
@@ -301,6 +337,7 @@ func TestIPDiffEq6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrWithExclude6(t *testing.T) {
 	_, sn, _ := net.ParseCIDR("fe80::/120")
 	ip := RandAddrWithExclude(sn, 0, 0)
@@ -309,6 +346,7 @@ func TestRandomAddrWithExclude6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrWithBadExcludeFirst6(t *testing.T) {
 	_, sn, _ := net.ParseCIDR("fe80::/120")
 	ip := RandAddrWithExclude(sn, 300, 0)
@@ -317,6 +355,7 @@ func TestRandomAddrWithBadExcludeFirst6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrWithBadExcludeSecond6(t *testing.T) {
 	_, sn, _ := net.ParseCIDR("fe80::/120")
 	ip := RandAddrWithExclude(sn, 0, 300)
@@ -325,6 +364,7 @@ func TestRandomAddrWithBadExcludeSecond6(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrWithBadExcludeBoth6(t *testing.T) {
 	_, sn, _ := net.ParseCIDR("fe80::/120")
 	ip := RandAddrWithExclude(sn, 150, 150)

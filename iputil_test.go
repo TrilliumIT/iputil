@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// nolint dupl
 func TestSubnetEqualSubnetTrue(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
 	_, net2, _ := net.ParseCIDR("10.1.5.0/24")
@@ -13,6 +14,7 @@ func TestSubnetEqualSubnetTrue(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetFalseDifferentMask(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.0.0/16")
 	_, net2, _ := net.ParseCIDR("10.1.0.0/24")
@@ -21,6 +23,7 @@ func TestSubnetEqualSubnetFalseDifferentMask(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetFalseDifferentNet(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.0.0/16")
 	_, net2, _ := net.ParseCIDR("10.2.0.0/16")
@@ -29,6 +32,7 @@ func TestSubnetEqualSubnetFalseDifferentNet(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetTrueIpInNet(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.6/16")
 	ip2, net2, _ := net.ParseCIDR("10.1.2.1/16")
@@ -38,12 +42,14 @@ func TestSubnetEqualSubnetTrueIpInNet(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetTrueBothNil(t *testing.T) {
 	if !SubnetEqualSubnet(nil, nil) {
 		t.Error("Expected nil subnets to be equal.")
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetFalseN1Nil(t *testing.T) {
 	_, net2, _ := net.ParseCIDR("10.1.5.0/24")
 	if SubnetEqualSubnet(nil, net2) {
@@ -51,6 +57,7 @@ func TestSubnetEqualSubnetFalseN1Nil(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetFalseN2Nil(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
 	if SubnetEqualSubnet(net1, nil) {
@@ -58,6 +65,7 @@ func TestSubnetEqualSubnetFalseN2Nil(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetTrueN1NilN2Global(t *testing.T) {
 	_, net2, _ := net.ParseCIDR("0.0.0.0/0")
 	if !SubnetEqualSubnet(nil, net2) {
@@ -65,6 +73,7 @@ func TestSubnetEqualSubnetTrueN1NilN2Global(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetEqualSubnetTrueN1GlobalN2Nil(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("0.0.0.0/0")
 	if !SubnetEqualSubnet(net1, nil) {
@@ -72,12 +81,14 @@ func TestSubnetEqualSubnetTrueN1GlobalN2Nil(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueBothNil(t *testing.T) {
 	if !SubnetContainsSubnet(nil, nil) {
 		t.Error("Expected nil contains nil.")
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetFalseN1Nil(t *testing.T) {
 	_, net2, _ := net.ParseCIDR("10.1.5.0/24")
 	if !SubnetContainsSubnet(nil, net2) {
@@ -85,6 +96,7 @@ func TestSubnetContainSubnetFalseN1Nil(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetFalseN2Nil(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
 	if SubnetContainsSubnet(net1, nil) {
@@ -92,6 +104,7 @@ func TestSubnetContainSubnetFalseN2Nil(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueN1NilN2Global(t *testing.T) {
 	_, net2, _ := net.ParseCIDR("0.0.0.0/0")
 	if !SubnetContainsSubnet(nil, net2) {
@@ -99,6 +112,7 @@ func TestSubnetContainSubnetTrueN1NilN2Global(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueN1GlobalN2Nil(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("0.0.0.0/0")
 	if !SubnetContainsSubnet(net1, nil) {
@@ -106,6 +120,7 @@ func TestSubnetContainSubnetTrueN1GlobalN2Nil(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueEqual(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
 	_, net2, _ := net.ParseCIDR("10.1.5.0/24")
@@ -114,6 +129,7 @@ func TestSubnetContainSubnetTrueEqual(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetTrueSmaller(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
 	_, net2, _ := net.ParseCIDR("10.1.5.128/25")
@@ -122,6 +138,7 @@ func TestSubnetContainSubnetTrueSmaller(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetFalseLarger(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.0/25")
 	_, net2, _ := net.ParseCIDR("10.1.5.0/24")
@@ -130,6 +147,7 @@ func TestSubnetContainSubnetFalseLarger(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestSubnetContainSubnetFalseDifferent(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.5.0/24")
 	_, net2, _ := net.ParseCIDR("10.1.6.0/24")
@@ -138,6 +156,8 @@ func TestSubnetContainSubnetFalseDifferent(t *testing.T) {
 	}
 }
 
+// nolint dupl
+// nolint dupl
 func TestLastAddr(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.6.0/24")
 	lr := net.ParseIP("10.1.6.255")
@@ -146,6 +166,7 @@ func TestLastAddr(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestLastAddrLongMask(t *testing.T) {
 	net1 := &net.IPNet{
 		IP:   net.IP{10, 1, 6, 0},
@@ -157,6 +178,8 @@ func TestLastAddrLongMask(t *testing.T) {
 	}
 }
 
+// nolint dupl
+// nolint dupl
 func TestFirstAddr(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.6.0/24")
 	lr := net.ParseIP("10.1.6.0")
@@ -165,6 +188,7 @@ func TestFirstAddr(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestFirstAddrLongMask(t *testing.T) {
 	net1 := &net.IPNet{
 		IP:   net.IP{10, 1, 6, 0},
@@ -176,6 +200,7 @@ func TestFirstAddrLongMask(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestNetworkID(t *testing.T) {
 	ip1, net1, _ := net.ParseCIDR("10.1.6.88/24")
 	net1.IP = ip1
@@ -186,6 +211,7 @@ func TestNetworkID(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddr(t *testing.T) {
 	_, net1, _ := net.ParseCIDR("10.1.6.0/24")
 	for i := 1; i <= 10; i++ {
@@ -196,6 +222,7 @@ func TestRandomAddr(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrLongMask(t *testing.T) {
 	net1 := &net.IPNet{
 		IP:   net.IP{10, 1, 6, 0},
@@ -209,6 +236,8 @@ func TestRandomAddrLongMask(t *testing.T) {
 	}
 }
 
+// nolint dupl
+// nolint dupl
 func TestIPAdd(t *testing.T) {
 	ip := net.ParseIP("10.1.5.0")
 	r := net.ParseIP("10.1.5.1")
@@ -217,6 +246,7 @@ func TestIPAdd(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPAddCarryover(t *testing.T) {
 	ip := net.ParseIP("10.1.5.255")
 	r := net.ParseIP("10.1.6.4")
@@ -225,6 +255,7 @@ func TestIPAddCarryover(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPAddCarryover2(t *testing.T) {
 	ip := net.ParseIP("10.1.255.255")
 	r := net.ParseIP("10.2.0.4")
@@ -233,6 +264,7 @@ func TestIPAddCarryover2(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPSub(t *testing.T) {
 	ip := net.ParseIP("10.1.5.5")
 	r := net.ParseIP("10.1.5.4")
@@ -241,6 +273,8 @@ func TestIPSub(t *testing.T) {
 	}
 }
 
+// nolint dupl
+// nolint dupl
 func TestIPSubCarryover(t *testing.T) {
 	ip := net.ParseIP("10.1.5.0")
 	r := net.ParseIP("10.1.4.251")
@@ -250,6 +284,8 @@ func TestIPSubCarryover(t *testing.T) {
 	}
 }
 
+// nolint dupl
+// nolint dupl
 func TestIPSubCarryover2(t *testing.T) {
 	ip := net.ParseIP("10.1.0.0")
 	r := net.ParseIP("10.0.255.251")
@@ -259,6 +295,7 @@ func TestIPSubCarryover2(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBefore(t *testing.T) {
 	ip := net.ParseIP("10.1.0.1")
 	ip2 := net.ParseIP("10.1.0.2")
@@ -268,6 +305,7 @@ func TestIPBefore(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPNotBefore(t *testing.T) {
 	ip := net.ParseIP("10.1.0.2")
 	ip2 := net.ParseIP("10.1.0.1")
@@ -277,6 +315,7 @@ func TestIPNotBefore(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBeforeEqual(t *testing.T) {
 	ip := net.ParseIP("10.1.0.1")
 	ip2 := net.ParseIP("10.1.0.1")
@@ -286,6 +325,7 @@ func TestIPBeforeEqual(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBeforeNilFirst(t *testing.T) {
 	ip2 := net.ParseIP("10.1.0.1")
 	ret := IPBefore(nil, ip2)
@@ -294,6 +334,7 @@ func TestIPBeforeNilFirst(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBeforeNilSecond(t *testing.T) {
 	ip := net.ParseIP("10.1.0.1")
 	ret := IPBefore(ip, nil)
@@ -302,6 +343,7 @@ func TestIPBeforeNilSecond(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPBeforeNilBoth(t *testing.T) {
 	ret := IPBefore(nil, nil)
 	if ret {
@@ -309,6 +351,7 @@ func TestIPBeforeNilBoth(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPDiffNeg(t *testing.T) {
 	ip := net.ParseIP("10.1.0.1")
 	ip2 := net.ParseIP("10.1.0.2")
@@ -318,6 +361,7 @@ func TestIPDiffNeg(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPDiffPos(t *testing.T) {
 	ip := net.ParseIP("10.1.0.2")
 	ip2 := net.ParseIP("10.1.0.1")
@@ -327,6 +371,7 @@ func TestIPDiffPos(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestIPDiffEq(t *testing.T) {
 	ip := net.ParseIP("10.1.0.1")
 	ip2 := net.ParseIP("10.1.0.1")
@@ -336,6 +381,7 @@ func TestIPDiffEq(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrWithExclude(t *testing.T) {
 	_, sn, _ := net.ParseCIDR("10.1.0.0/24")
 	ip := RandAddrWithExclude(sn, 0, 0)
@@ -344,6 +390,7 @@ func TestRandomAddrWithExclude(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrWithBadExcludeFirst(t *testing.T) {
 	_, sn, _ := net.ParseCIDR("10.1.0.0/24")
 	ip := RandAddrWithExclude(sn, 300, 0)
@@ -352,6 +399,7 @@ func TestRandomAddrWithBadExcludeFirst(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrWithBadExcludeSecond(t *testing.T) {
 	_, sn, _ := net.ParseCIDR("10.1.0.0/24")
 	ip := RandAddrWithExclude(sn, 0, 300)
@@ -360,6 +408,7 @@ func TestRandomAddrWithBadExcludeSecond(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestRandomAddrWithBadExcludeBoth(t *testing.T) {
 	_, sn, _ := net.ParseCIDR("10.1.0.0/24")
 	ip := RandAddrWithExclude(sn, 150, 150)
@@ -368,6 +417,7 @@ func TestRandomAddrWithBadExcludeBoth(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestMakeSameLenghtNoChange(t *testing.T) {
 	ip := net.IP{10, 10, 10, 10}
 	oip := net.IP{10, 10, 10, 10}
@@ -396,10 +446,10 @@ func TestMakeSameLenghtNoChange(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func TestMakeNilZeroNoChange(t *testing.T) {
-	ip := net.IP{}
+	var ip, oip net.IP
 	ip = nil
-	oip := net.IP{}
 	oip = nil
 	ip2 := net.IP{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 10, 10, 10, 11}
 	oip2 := net.IP{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 10, 10, 10, 11}
@@ -430,6 +480,7 @@ func TestMakeNilZeroNoChange(t *testing.T) {
 	}
 }
 
+// nolint dupl
 func strictEqual(ip, ip2 net.IP) bool {
 	if len(ip) != len(ip2) {
 		return false
