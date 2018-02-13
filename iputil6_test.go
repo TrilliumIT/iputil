@@ -219,3 +219,105 @@ func TestIPSubCarryover26(t *testing.T) {
 		t.Errorf("%v should equal %v", rip.String(), r.String())
 	}
 }
+
+func TestIPBefore6(t *testing.T) {
+	ip := net.ParseIP("fe80::1")
+	ip2 := net.ParseIP("fe80::2")
+	ret := IPBefore(ip, ip2)
+	if !ret {
+		t.Errorf("%v should be before %v", ip.String(), ip2.String())
+	}
+}
+
+func TestIPNotBefore6(t *testing.T) {
+	ip := net.ParseIP("fe80::2")
+	ip2 := net.ParseIP("fe80::1")
+	ret := IPBefore(ip, ip2)
+	if ret {
+		t.Errorf("%v should not be before %v", ip.String(), ip2.String())
+	}
+}
+
+func TestIPBeforeEqual6(t *testing.T) {
+	ip := net.ParseIP("fe80::1")
+	ip2 := net.ParseIP("fe80::1")
+	ret := IPBefore(ip, ip2)
+	if ret {
+		t.Errorf("%v should not be before %v", ip.String(), ip2.String())
+	}
+}
+
+func TestIPBeforeNilFirst6(t *testing.T) {
+	ip2 := net.ParseIP("fe80::1")
+	ret := IPBefore(nil, ip2)
+	if !ret {
+		t.Errorf("nil should be before %v", ip2.String())
+	}
+}
+
+func TestIPBeforeNilSecond6(t *testing.T) {
+	ip := net.ParseIP("fe80::1")
+	ret := IPBefore(ip, nil)
+	if ret {
+		t.Errorf("%v should not be before nil", ip.String())
+	}
+}
+
+func TestIPDiffNeg6(t *testing.T) {
+	ip := net.ParseIP("fe80::1")
+	ip2 := net.ParseIP("fe80::2")
+	ret := IPDiff(ip, ip2)
+	if ret != -1 {
+		t.Errorf("%v minus %v should be -1", ip, ip2)
+	}
+}
+
+func TestIPDiffPos6(t *testing.T) {
+	ip := net.ParseIP("fe80::2")
+	ip2 := net.ParseIP("fe80::1")
+	ret := IPDiff(ip, ip2)
+	if ret != 1 {
+		t.Errorf("%v minus %v should be 1", ip, ip2)
+	}
+}
+
+func TestIPDiffEq6(t *testing.T) {
+	ip := net.ParseIP("fe80::1")
+	ip2 := net.ParseIP("fe80::1")
+	ret := IPDiff(ip, ip2)
+	if ret != 0 {
+		t.Errorf("%v minus %v should be 0", ip, ip2)
+	}
+}
+
+func TestRandomAddrWithExclude6(t *testing.T) {
+	_, sn, _ := net.ParseCIDR("fe80::/120")
+	ip := RandAddrWithExclude(sn, 0, 0)
+	if !sn.Contains(ip) {
+		t.Errorf("%v should be an IP in %v", ip.String(), sn.String())
+	}
+}
+
+func TestRandomAddrWithBadExcludeFirst6(t *testing.T) {
+	_, sn, _ := net.ParseCIDR("fe80::/120")
+	ip := RandAddrWithExclude(sn, 300, 0)
+	if ip != nil {
+		t.Errorf("exclusions that land outside the subnet's range should return a nil IP")
+	}
+}
+
+func TestRandomAddrWithBadExcludeSecond6(t *testing.T) {
+	_, sn, _ := net.ParseCIDR("fe80::/120")
+	ip := RandAddrWithExclude(sn, 0, 300)
+	if ip != nil {
+		t.Errorf("exclusions that land outside the subnet's range should return a nil IP")
+	}
+}
+
+func TestRandomAddrWithBadExcludeBoth6(t *testing.T) {
+	_, sn, _ := net.ParseCIDR("fe80::/120")
+	ip := RandAddrWithExclude(sn, 150, 150)
+	if ip != nil {
+		t.Errorf("exclusions that land outside the subnet's range should return a nil IP")
+	}
+}

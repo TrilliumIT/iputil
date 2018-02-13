@@ -104,12 +104,18 @@ func RandAddr(n *net.IPNet) net.IP {
 func RandAddrWithExclude(n *net.IPNet, xf, xl int) net.IP {
 	f := IPAdd(FirstAddr(n), xf)
 	l := IPAdd(LastAddr(n), -xl)
-	d := IPDiff(f, l)
+	d := IPDiff(l, f)
+	if d <= 0 {
+		return nil
+	}
 	return IPAdd(f, rand.Intn(d))
 }
 
 //IPDiff returns the difference between ip and ip2
+//nil is treated as the zero address
 func IPDiff(ip, ip2 net.IP) int {
+	ip, ip2 = makeNilZero(ip, ip2)
+	ip, ip2 = makeSameLength(ip, ip2)
 	o := 1
 	if IPBefore(ip, ip2) {
 		ip, ip2 = ip2, ip
@@ -126,12 +132,47 @@ func IPDiff(ip, ip2 net.IP) int {
 
 //IPDiff returns true if ip < ip2
 func IPBefore(ip, ip2 net.IP) bool {
+	ip, ip2 = makeNilZero(ip, ip2)
+	ip, ip2 = makeSameLength(ip, ip2)
 	for i := range ip {
 		if int(ip[i]) < int(ip2[i]) {
 			return true
 		}
 	}
 	return false
+}
+
+func makeNilZero(ip, ip2 net.IP) (net.IP, net.IP) {
+	if ip == nil {
+		ip = net.IP{0, 0, 0, 0}
+	}
+	if ip2 == nil {
+		ip2 = net.IP{0, 0, 0, 0}
+	}
+
+	return ip, ip2
+}
+
+func makeSameLength(ip, ip2 net.IP) (net.IP, net.IP) {
+	var ph1 []byte
+	var ph2 []byte
+
+	if len(ip) < len(ip2) {
+		ph1 = append(ph1, ip2[:len(ip2)-len(ip)]...)
+		ph1 = append(ph1, ip[:]...)
+		ph2 = ip2
+	}
+	if len(ip2) < len(ip) {
+		ph2 = append(ph2, ip[:len(ip)-len(ip2)]...)
+		ph2 = append(ph2, ip2...)
+		ph1 = ip
+	}
+	if len(ip) == len(ip2) {
+		ph1 = ip
+		ph2 = ip2
+	}
+
+	return ph1, ph2
 }
 
 //IPAdd adds an offset to an IP

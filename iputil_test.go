@@ -258,3 +258,112 @@ func TestIPSubCarryover2(t *testing.T) {
 		t.Errorf("%v should equal %v", rip.String(), r.String())
 	}
 }
+
+func TestIPBefore(t *testing.T) {
+	ip := net.ParseIP("10.1.0.1")
+	ip2 := net.ParseIP("10.1.0.2")
+	ret := IPBefore(ip, ip2)
+	if !ret {
+		t.Errorf("%v should be before %v", ip.String(), ip2.String())
+	}
+}
+
+func TestIPNotBefore(t *testing.T) {
+	ip := net.ParseIP("10.1.0.2")
+	ip2 := net.ParseIP("10.1.0.1")
+	ret := IPBefore(ip, ip2)
+	if ret {
+		t.Errorf("%v should not be before %v", ip.String(), ip2.String())
+	}
+}
+
+func TestIPBeforeEqual(t *testing.T) {
+	ip := net.ParseIP("10.1.0.1")
+	ip2 := net.ParseIP("10.1.0.1")
+	ret := IPBefore(ip, ip2)
+	if ret {
+		t.Errorf("%v should not be before %v", ip.String(), ip2.String())
+	}
+}
+
+func TestIPBeforeNilFirst(t *testing.T) {
+	ip2 := net.ParseIP("10.1.0.1")
+	ret := IPBefore(nil, ip2)
+	if !ret {
+		t.Errorf("nil should be before %v", ip2.String())
+	}
+}
+
+func TestIPBeforeNilSecond(t *testing.T) {
+	ip := net.ParseIP("10.1.0.1")
+	ret := IPBefore(ip, nil)
+	if ret {
+		t.Errorf("%v should not be before nil", ip.String())
+	}
+}
+
+func TestIPBeforeNilBoth(t *testing.T) {
+	ret := IPBefore(nil, nil)
+	if ret {
+		t.Errorf("nil should not be before nil")
+	}
+}
+
+func TestIPDiffNeg(t *testing.T) {
+	ip := net.ParseIP("10.1.0.1")
+	ip2 := net.ParseIP("10.1.0.2")
+	ret := IPDiff(ip, ip2)
+	if ret != -1 {
+		t.Errorf("%v minus %v should be -1", ip, ip2)
+	}
+}
+
+func TestIPDiffPos(t *testing.T) {
+	ip := net.ParseIP("10.1.0.2")
+	ip2 := net.ParseIP("10.1.0.1")
+	ret := IPDiff(ip, ip2)
+	if ret != 1 {
+		t.Errorf("%v minus %v should be 1", ip, ip2)
+	}
+}
+
+func TestIPDiffEq(t *testing.T) {
+	ip := net.ParseIP("10.1.0.1")
+	ip2 := net.ParseIP("10.1.0.1")
+	ret := IPDiff(ip, ip2)
+	if ret != 0 {
+		t.Errorf("%v minus %v should be 0", ip, ip2)
+	}
+}
+
+func TestRandomAddrWithExclude(t *testing.T) {
+	_, sn, _ := net.ParseCIDR("10.1.0.0/24")
+	ip := RandAddrWithExclude(sn, 0, 0)
+	if !sn.Contains(ip) {
+		t.Errorf("%v should be an IP in %v", ip.String(), sn.String())
+	}
+}
+
+func TestRandomAddrWithBadExcludeFirst(t *testing.T) {
+	_, sn, _ := net.ParseCIDR("10.1.0.0/24")
+	ip := RandAddrWithExclude(sn, 300, 0)
+	if ip != nil {
+		t.Errorf("exclusions that land outside the subnet's range should return a nil IP")
+	}
+}
+
+func TestRandomAddrWithBadExcludeSecond(t *testing.T) {
+	_, sn, _ := net.ParseCIDR("10.1.0.0/24")
+	ip := RandAddrWithExclude(sn, 0, 300)
+	if ip != nil {
+		t.Errorf("exclusions that land outside the subnet's range should return a nil IP")
+	}
+}
+
+func TestRandomAddrWithBadExcludeBoth(t *testing.T) {
+	_, sn, _ := net.ParseCIDR("10.1.0.0/24")
+	ip := RandAddrWithExclude(sn, 150, 150)
+	if ip != nil {
+		t.Errorf("exclusions that land outside the subnet's range should return a nil IP")
+	}
+}
