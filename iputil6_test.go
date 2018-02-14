@@ -372,3 +372,12 @@ func TestRandomAddrWithBadExcludeBoth6(t *testing.T) {
 		t.Errorf("exclusions that land outside the subnet's range should return a nil IP")
 	}
 }
+
+// nolint dupl
+func TestCIDRToIPNet6(t *testing.T) {
+	ip := "fe80::1/64"
+	ipnet, _ := CIDRToIPNet(ip)
+	if !ipnet.IP.Equal(net.ParseIP("fe80::1")) {
+		t.Errorf("ip of %v should equal 10.1.0.1", ipnet.String())
+	}
+}

@@ -492,3 +492,21 @@ func strictEqual(ip, ip2 net.IP) bool {
 	}
 	return true
 }
+
+// nolint dupl
+func TestCIDRToIPNet(t *testing.T) {
+	ip := "10.1.0.1/24"
+	ipnet, _ := CIDRToIPNet(ip)
+	if !ipnet.IP.Equal(net.ParseIP("10.1.0.1")) {
+		t.Errorf("ip of %v should equal 10.1.0.1", ipnet.String())
+	}
+}
+
+// nolint dupl
+func TestBadCIDRToIPNet(t *testing.T) {
+	ip := "not an ip address"
+	_, err := CIDRToIPNet(ip)
+	if err == nil {
+		t.Errorf("parsing something not a CIDR should return an error")
+	}
+}

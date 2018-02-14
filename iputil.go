@@ -191,3 +191,11 @@ func IPAdd(ip net.IP, offset int) net.IP {
 	}
 	return rip
 }
+
+func CIDRToIPNet(cidr string) (*net.IPNet, error) {
+	gw, sn, err := net.ParseCIDR(cidr)
+	if err != nil {
+		return nil, err
+	}
+	return &net.IPNet{IP: gw, Mask: sn.Mask}, nil
+}
