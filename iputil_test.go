@@ -306,6 +306,16 @@ func TestIPBefore(t *testing.T) {
 }
 
 // nolint dupl
+func TestIPBefore2(t *testing.T) {
+	ip := net.ParseIP("11.1.0.1")
+	ip2 := net.ParseIP("10.1.0.2")
+	ret := IPBefore(ip, ip2)
+	if ret {
+		t.Errorf("%v should not be before %v", ip.String(), ip2.String())
+	}
+}
+
+// nolint dupl
 func TestIPNotBefore(t *testing.T) {
 	ip := net.ParseIP("10.1.0.2")
 	ip2 := net.ParseIP("10.1.0.1")

@@ -135,8 +135,8 @@ func IPBefore(ip, ip2 net.IP) bool {
 	ip, ip2 = makeNilZero(ip, ip2)
 	ip, ip2 = makeSameLength(ip, ip2)
 	for i := range ip {
-		if int(ip[i]) < int(ip2[i]) {
-			return true
+		if int(ip[i]) != int(ip2[i]) {
+			return int(ip[i]) < int(ip2[i])
 		}
 	}
 	return false
